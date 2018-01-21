@@ -152,3 +152,208 @@ wmode:"..."
     * **window** - 默认设置，在系统支持和性能之间的折衷。注意:在某些系统和浏览器上，html元素不能在此模式下与Flashplayer重叠!有关详细信息，请参见此[wmode](https://helpx.adobe.com/flash/kb/flash-object-embed-tag-attributes.html#main_Using_Window_Mode__wmode__values_)链接。
     <!-- opaque - Allow other html elements to overlap the Flashplayer (depending on the system and browser this can cause slower and jerky rendering). -->
     * **opaque** - 允许其他html元素与Flashplayer重叠(这取决于系统和浏览器，这可能导致更慢的和抖动的渲染)。
+    <!-- opaque-flash - Same as opaque but only for the Flashplayer (will be ignored by the HTML5 viewer - see the HTML5 notes below) -->
+    * **opaque-flash** - 与opaque相似，但是仅仅针对flashplayer(HTML5视图将被忽略 - 参见下面的HTML5注意)
+    <!-- transparent - Make the Flashplayer background transparent to allow seeing html elements behind the Flashplayer and additionally also allow other html elements to overlap the Flashplayer (depending on the system and browser this can cause slower and jerky rendering). -->
+    * **transparent** - 使flashplayer背景透明，允许看到flashplayer后面到html元素，此外还允许其他到html元素与flashplayer重叠(取决于系统和浏览器，这可能导致更慢到和抖动到渲染)。
+    <!-- transparent-flash - Same as transparent but only for the Flashplayer (will be ignored by the HTML5 viewer - see the HTML5 notes below). -->
+    * **transparent-flash** - 与transparent相似，但是仅仅针对flashplayer(HTML5视图将被忽略 - 参见下面的HTML5)。
+    <!-- direct - Best performance, hardware accelerated presentation, no html overlapping on many systems and browsers (this is typically the fastest mode but on incompatible or older systems and browsers this can cause slowdowns). -->
+    * ** direct ** - 最佳性能，硬件加速，在许多系统和浏览器上没有重叠(者通常是是最快的方式，但是在不兼容和较久的浏览器上可能会导致不可用)。
+<!-- krpano will use wmode=direct by default, except for Chrome - there wmode=window will be used by default (better performance and no black window during resizing). -->
+* 默认情况下krapno将使用**wmode=direct**，除了Chrome - 默认使用**wmode=window**(在改变尺寸的时候拥有更好的性能并且没有黑屏)。
+<!-- HTML5 notes: The wmode setting is typically a Flashplayer setting, but wmode=opaque and wmode=transparent will be evaluated also by the krpano HTML5 viewer and make the viewer background transparent there too. Overlapping html elements itself are always possible when using the HTML5 viewer. -->
+* HTML5注意：**wmode**通常是flashplayer的设置，但是**wmode=opaque**和**wmode=transparent**也计算html5视图并使其背景透明。当使用html5视图时html元素自身可以重叠。  
+  
+```
+localfallback:"http://localhost:8090"
+```
+<!-- When running HTML5 content locally with file:// urls several browsers (especially Chrome and Safari) are restricting the dynamic loading of data files! In the krpano HTML5 viewer this affects the xml and plugin loading. -->
+* 当以本地文件**file:// urls**的方式运行html5时，一些浏览器(尤其是Chrome和Safari)限制加载动态的数据文件！这将影响xml和plugin在html5视图上的加载。
+<!-- For more information about this case please see here - Local Usage. -->
+* 这种情况下更多的信息请参见这里 - [本地使用](https://krpano.com/docu/localusage/#top)
+<!-- To avoid just getting a xml loading error in this case, the embedding script checks in this case if loading would be possible and if not, it offers some alternative solutions. -->
+* 为了避免这种加载xml错误，嵌入脚本检查并在不允许的情况下提供一些代替方案。
+<!-- Possible settings: -->
+* 可能的设置：
+    <!-- An url of the krpano Testing Server (by default http://localhost:8090) -->
+    * **krpano测试服务(默认http://localhost:8090)**
+        <!-- When the localfallback setting will be set to an url of the krpano Testing Server (the default case) and the server is currently already running, then the current page will be automatically redirected to the testing server to allow a full featured local usage. -->
+        * 当localfallback设置为一个url(默认情况)并且服务已经运行，那么当前页将会自动重定向到测试服务器，允许完整的本地使用。
+        <!-- When the server is not running, the error fallback case will be used. -->
+        * 如果服务没有运行，将使用错误回退。
+    <!-- flash - Use the krpano Flash viewer instead. The Flashplayer is not affected by the local browser restrictions. -->
+    * **flash** - 使用flash视图替代。flashplayer不受浏览器本地限制的影响。
+    <!-- error - Show an error and information message about local usage. The error message could be customized by using the onerror callback. -->
+    * **error** - 显示一条本地使用的错误信息。该信息可以使用onerror回调函数定制。
+    <!-- none - Ignore that they are local restrictions and start the HTML5 viewer anyway... -->
+    * **none** - 忽略本地限制并启动html5视图。。。  
+
+```
+vars:{...}
+```
+<!-- Pass a Javascript Object with krpano variable:value pairs. -->
+* 传入一个js对象**属性:值** ==> krpano **变量:值**
+<!-- The variables will be set AFTER the xml file has been be loaded and parsed. So these variables can be used to add new settings or to overwrite settings that were already defined in the xml. -->
+* 这些变量将被之后的xml文件加载和解析。它们可以用于在xml中添加设置或者覆盖已有的设置。
+<!-- Example: -->
+* 比如：
+    ```
+    var settings = {};
+    settings["onstart"] = "trace('on start...')";
+    settings["view.hlookat"] = 30;
+    embedpano({xml:"pano.xml", target:"pano", vars:settings});
+    ```
+      
+```
+initvars:{...}
+```
+<!-- Pass a Javascript Object with krpano variable:value pairs. -->
+* 传入一个js对象**属性:值** ==> krpano **变量:值**
+<!-- This is basically the same as the vars setting, but these variables will be set BEFORE the xml file wil be loaded and parsed. -->
+* 这基本上时和vars一样的设置，但是这些变量将在xml之前加载和解析。
+<!-- The main usage of this setting will be to set custom path variables that can be used as placeholders inside url paths in the xml files and / or to set variables that can be used inside xml-if-checks for <include> elements. -->
+* 主要用于设置自定义路径变量，然后在xml文件中替换内部占位符。或者用于xml内部的[if检查和include元素](https://krpano.com/docu/xml/#if)
+* 比如：
+    ```
+    JS:
+    embedpano({..., initvars:{mypath:"./panos1/"} });
+    XML:
+    url="%$mypath%image.jpg"
+
+    JS:
+    embedpano({..., initvars:{design:"flat"}, ...});
+    XML:
+    <include url="design_default.xml" if="design == default" />
+    <include url="design_flat.xml"    if="design == flat"    />
+    ```
+<!-- To be able to pass initvars variables via http queries directly at the url of the html file this syntax need to be used: -->
+* 可以直接通过html的url查询传入initvars变量
+    ```
+    tour.html?initvars.variable=value
+    ```
+      
+```
+basepath:...
+```
+<!-- Sets a custom base-path for resolving paths that are relative to the krpano swf file. -->
+* 设置自定义的基础路径解析相对于swf文件的路径
+<!-- Can be used in Flash and HTML5 for adjusting relative paths in the xml. -->
+* 用于在xml中调整相对路径
+  
+```
+consolelog:false
+```
+<!-- A Boolean setting that defines if krpano log/trace-messages should be sent also to the browser Javascript console. -->
+* 用来设置是否krpano的日志跟踪消息发送到浏览器的js控制台
+  
+```
+mwheel:true
+```
+<!-- A Boolean setting to control the mouse-wheel usage. -->
+* 控制鼠标滚轮的使用。
+<!-- When set to true (the default), then the mouse-wheel events will be captured and can be used in the viewer (e.g. for zooming). -->
+* 当设置为true(默认)，鼠标滚轮事件将被捕获并可以用于视图(比如：缩放)。
+<!-- When set to false, then any mouse-wheel usage will be ignored and the browser will do its default mouse-wheel handling (typically scrolling the webpage). -->
+* 当设置为false，鼠标滚轮的使用将被忽略，并且浏览器将会执行默认的鼠标滚轮处理(通常是滚动页面)。
+  
+```
+capturetouch:true
+```
+<!-- A Boolean setting to control the captureing of touch events. -->
+* 控制触摸事件的捕获。
+<!-- When set to true (the default), then the touch events will be captured and can be used in the viewer (e.g. for panning and zooming). -->
+* 当设置为true(默认)，触摸事件将被捕获并可以用于视图(比如：平移和缩放)。 
+<!-- When set to false, then touch events itself will be still used by the viewer, but their default event processing will be not stopped. That means in this case the browser might pan or zoom the webpage. -->
+* 当设置为false，触摸事件本身仍然可用于视图，但是它们的默认事件处理会停止。这一位置在这种情况下浏览器可能拖动或缩放页面。
+  
+```
+focus:true
+```
+<!-- A Boolean setting to give the viewer the input / keyboard focus on startup. -->
+* 在启动时自动让视图获取到输入设备的焦点。
+<!-- When not set, the setting will be set automatically depending on the viewer size - when the viewer will cover the whole webpage, focus will be set to true, otherwise to false. -->
+* 当不设置时，将根据视图尺寸自动设置 - 当视图覆盖整个web页面时，focus将设置为true，否则为false。
+<!-- This works only in HTML5 (all browsers) and in the Chrome Flashplayer. In other browsers the Flash element requires an initial click by the user for getting the focus. -->
+* 只在html5(所有浏览器)和chrome的flashplayer中有效。在其他的浏览器中，flash元素需要用户的初始点击才能获取到焦点。
+  
+```
+webglsettings:{preserveDrawingBuffer:false, depth:false, stencil:false}
+```
+<!-- Pass an object with special settings for the WebGL context creation. -->
+* 为创建webgl上下文而传入的特殊设置。
+<!-- The WebGL context will be created at startup and can't be changed at runtime, therefore these settings need to be specified already during embedding. -->
+* webgl上下文需要在启动时创建并且不能在运行时修改，因此这些设置需要在嵌入时制定。
+<!-- Available settings: -->
+* 可用设置：
+    <!-- preserveDrawingBuffer - Keep the drawing buffer content. Would need to be enabled for when trying to make screenshots of the WebGL canvas via toDataURL or readPixels, false by default. -->
+    * **preserveDrawingBuffer** - 保留绘图缓冲区内容。在尝试通过toDataUrl或readPixels制作WebGL画布截屏时需要启动它，默认是false。
+    <!-- depth - Create a depth buffer, false by default. Would need to be enabled for the correct ThreeJS plugin usage. -->
+    * **depth** - 创建一个深度缓冲区，默认是false。使用[ThreeJS](https://krpano.com/forum/wbb/index.php?page=Thread&threadID=12479)插件时需要启用它。
+    <!-- stencil - Create a stencil buffer, false by default. -->
+    * **stencil** - 创建一个模板缓冲区，默认false。
+    <!-- failIfMajorPerformanceCaveat - Don't use WebGL when the rendering performance would be dramatically lower than the OpenGL rendering performance of a native application, false by default. -->
+    * **failIfMajorPerformanceCaveat** - 在原生应用中当webgl渲染性能明显低于opengl时不使用webgl，默认是false。
+<!-- All these settings are disabled by default for performance and memory reasons (especially on mobile devices). -->
+* 考虑到性能和内存的原因，这些设置默认都是被禁用的(尤其是在移动设备)。
+  
+```
+mobilescale:0.5
+```
+<!-- By default all krpano content on mobile devices will be scaled by 0.5. -->
+* krpano内容在移动设备上默认被缩放0.5倍。
+<!-- To disable that scaling, set the mobilescale setting to 1.0. -->
+* 禁止缩放，设置为1.0。
+<!-- This can be useful for implementing responsive webdesigns. -->
+* 这将用于实现响应式设计。
+<!-- See also the xml stagescale setting. -->
+* 参见[stagescale](https://krpano.com/docu/actions/#stagescale)设置。
+  
+```
+fakedevice:""
+```
+<!-- Fake the krpano device detection settings. -->
+* 伪装设备检测
+<!-- Available settings: "mobile", "tablet", "desktop". -->
+* 可用的设置："mobile", "tablet", "desktop".
+<!-- Note - This setting should be only used for internal testing, never for publishing! -->
+* **注意：-这个设置仅仅应仅用于内部测试，不要用于生产发布**
+  
+```
+onready:...Javascript-Function...
+```
+<!-- The onready setting can be used to set a call-back-function to get notified when the embedding is done and the krpano viewer is ready for usage. -->
+* 嵌入完成并且krpano视图可用时的回调函数。
+<!-- The given function will be called with the krpano Javascript-Interface object. -->
+* 该函数将被krpano的[Javascript-Interface](https://krpano.com/docu/js/#interfaceobject)对象调用。
+* 例如：
+    ```
+    embedpano({target:"krpanoDIV", onready:krpanoReady});
+
+    function krpanoReady(krpano)
+    {
+        krpano.call("trace(krpano is ready...)");
+    }
+    ```
+<!-- Flashplayer Notes: This function requires the External Interface of the Flashplayer! This means the call-back will work offline/locally only when the security settings of the Flashplayer were adjusted. See here for more detatils - Local / Offline Usage. -->
+* Flashplayer注意：这个函数需要flashplayer外部接口。这意味着只有调整为安全的设置才可以在离线/本地可用。了解更多[Local / Offline Usage](https://krpano.com/docu/localusage/#top)。
+  
+```
+onerror:...Javascript-Function...
+```
+<!-- The onerror setting can be used to set a custom embedding-error-handling function. -->
+* 设置自定义的嵌入错误处理。
+<!-- The given function will be called with an error-message string as parameter. -->
+* 该函数被调用时会传入一个错误信息的字符串参数。
+  
+```
+passQueryParameters:false
+```
+<!-- A Boolean setting. When set to true, all query parameters from the html url will be passed to the viewer as variables. -->
+* 当设置为true，所有的urlquery参数会作为变量传入视图。
+<!-- When enabled, it will be also possible to pass the html5, flash, wmode, mobilescale, fakedevice and initvars settings directly at the html url. -->
+* 当可用时，它也可以直接在html的url中传入html5、flash、wmode、mobilescale、fakedevice和initvars设置。
+* 使用方式：
+    ```
+    tour.html?html5=only&startscene=scene2&initvars.design=flat
+    ```

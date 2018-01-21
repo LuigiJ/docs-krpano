@@ -18,4 +18,4 @@ krpano脚本文件只要在HTML页面的任意位置引入一次(但是必须在
 The file is always the same, it doesn't contain any pano or tour specific information, that means it could be shared across several panos/tours or projects.
 E.g. to make later updates easier just use only one global folder for the krpano viewer and plugins files and link from all other projects to them. Then all projects can be updated by only updating the global krpano files.
 -->
-* 改文件始终是相同的，它不包含任何的pano或者tour的特定信息，这说明它能够在多个panos/tours或者项目中共享。(例如：为了使以后的更新更容易，只需使用一个全局文件夹放置krpano视图和插件文件，并将所有其他项目链接到它们。然后，所有的项目都可以通过更新全局krpano文件来更新。)
+* 该文件始终是相同的，它不包含任何的pano或者tour的特定信息，这说明它能够在多个panos/tours或者项目中共享。(例如：为了使以后的更新更容易，只需使用一个全局文件夹放置krpano视图和插件文件，并将所有其他项目链接到它们。然后，所有的项目都可以通过更新全局krpano文件来更新。)
